@@ -72,23 +72,66 @@ def create_app(test_config=None):
 
     @app.route('/add_ip', methods=['POST'])
     def add_ip():
-        pass
+        interface_name = list(request.form.keys())[0]
+        ip_address = request.form.get(interface_name)
+        validator = IPAddress()
+        if validator.check_ipv4(ip_address):
+            add_ip_address(
+                interface_name,
+                ip_address,
+                cache.get('password'))
+            return redirect(url_for('index'))
+        flash('ip address or mask was incorrect')
+        return redirect(url_for('index'))
 
     @app.route('/del_ip', methods=['POST'])
     def del_ip():
-        pass
+        ip_address = list(request.form.keys())[0]
+        interface_name = list(request.form.keys())[1]
+        delete_ip_address(
+            interface_name,
+            ip_address,
+            cache.get('password'))
+        return redirect(url_for('index'))
 
     @app.route('/change_ip', methods=['POST'])
     def change_ip():
-        pass
+        interface_name = list(request.form.keys())[1]
+        new_ip = request.form.get(interface_name)
+        old_ip = list(request.form.keys())[0]
+        validator = IPAddress()
+        if validator.check_ipv4(new_ip):
+            change_ip_address(
+                interface_name,
+                new_ip,
+                old_ip,
+                cache.get('password'))
+            return redirect(url_for('index'))
+        return redirect(url_for('index'))
 
     @app.route('/change_mask', methods=['POST'])
     def change_mask():
-        pass
+        print(request.form)
+        print(request.form.keys())
+        interface_name = list(request.form.keys())[2]
+        ip_address = list(request.form.keys())[1]
+        new_mask = request.form.get(interface_name)
+        validator = IPAddress()
+        if validator.check_ipv4(new_mask):
+            change_ip_mask(
+                    interface_name,
+                    ip_address,
+                    new_mask,
+                    cache.get('password'))
+            return redirect(url_for('index'))
+        flash('ip address or mask was incorrect')
+        return redirect(url_for('index'))
 
     @app.route('/logout')
     def logout():
-        pass
+        cache.set('password', None)
+        session['key'] = None
+        return redirect(url_for('index'))
 
     @socketio.on('disconnect')
     def disconnect():
