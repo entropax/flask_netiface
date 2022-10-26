@@ -43,7 +43,18 @@ def create_app(test_config=None):
 
     @app.route('/auth', methods=['GET', 'POST'])
     def auth():
-        pass
+        if request.method == 'POST':
+            password = request.form['password']
+            if sudo_perm_validator(password):
+                cache.set('password', password)
+                session.permanent = False
+                session['key'] = app.config['SECRET_COOKIE']
+                return redirect(url_for('index'))
+            else:
+                return render_template('auth.html', password='False')
+
+        return render_template('auth.html')
+
 
     @app.route('/switch_state', methods=['POST'])
     def switch_state():
