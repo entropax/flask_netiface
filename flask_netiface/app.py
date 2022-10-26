@@ -14,6 +14,15 @@ from flask_socketio import SocketIO
 from flask_bootstrap import Bootstrap5
 from wtforms.validators import IPAddress
 
+from flask_netiface.auth import sudo_perm_validator
+from flask_netiface.net_interface import (
+    get_interfaces_info,
+    add_ip_address,
+    delete_ip_address,
+    change_ip_address,
+    change_ip_mask,
+    switch_interface_status)
+
 
 def create_app(test_config=None):
     # create and configure the app with factory
@@ -30,7 +39,7 @@ def create_app(test_config=None):
 
     @app.route('/', methods=['GET'])
     def index():
-        return 'main page'
+        return render_template('index.html', interfaces=get_interfaces_info())
 
     @app.route('/auth', methods=['GET', 'POST'])
     def auth():
