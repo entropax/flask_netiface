@@ -39,9 +39,9 @@
 git clone https://github.com/entropax/flask_netiface && \
 cd flask_netiface && \
 python3 -m venv ./.venv && source .venv/bin/activate && \
-python3 -m pip install --user --upgrade pip && pip install -r requirements.txt`
+python3 -m pip install --upgrade pip && pip install -r requirements.txt
 ```
-- if you use poetry:
+- or you use poetry:
 ```
 git clone https://github.com/entropax/flask_netiface && \
 cd flask_netiface && \
@@ -51,9 +51,13 @@ poetry install
 ## Usage ##
 **To start web-ap run one of these block in terminal emulator on Linux-machine**
 1.
+- with flask:
+```sh
+flask --app flask_netiface run -p 5050
+```
 - with poetry:
 ```sh
-poetrry run flask --app flask_netiface run -p 5050
+poetry run flask --app flask_netiface run -p 5050
 ```
 - OR with make:
 ```sh
