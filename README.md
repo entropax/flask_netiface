@@ -63,7 +63,7 @@ NEXT open this [link](`http://127.0.0.1:5005/`) in web-browser<br>
 
 Here You can see Network-interfaces table,<br>
 For further manipulation with Network interfaces You need to authorize in the App.<br>
-For authorization You need to input Your root password into correspondig login form.<br>
+For authorization You need to input Your sudo password into correspondig login form.<br>
 After that You're about to control Network interfaces with buttons<br>
 ### Authorization
 
@@ -80,3 +80,4 @@ After that You're about to control Network interfaces with buttons<br>
 ----
 ----
 ### Note
+Изменение маски подсети работает некорректно.
