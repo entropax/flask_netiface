@@ -1,0 +1,14 @@
+<html>
+   <body>
+
+    {% if password == 'False' %}
+        <h2>Incorrect password!</h2>
+    {% endif %}
+      <form action = "/auth" method = "POST">
+         <p><h3>Enter password</h3></p>
+         <p><input type='password' name='password' autocomplete="off"/></p>
+         <p><input type='submit' value='Authorize'/></p>
+      </form>
+
+   </body>
+</html>

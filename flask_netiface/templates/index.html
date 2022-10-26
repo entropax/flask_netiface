@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>flask_net_ifaces</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
+    {{ bootstrap.load_css() }}
+  </head>
+  <body>
+   <h1>Welcome to flask_net_ifaces</h1>
+
+    {% block content %}
+        {% if session.get('key') == config['SECRET_COOKIE'] %}
+            <h2>You authorized, click for logout</h2>
+            <!-- <button type="button" onclick=NAN>change</button> -->
+            <a href="/logout">Logout</a>
+        {% else %}
+            <h2>Warning! You NOT authorized, for make any changes authorize</h2>
+            <a href="/auth">Authorize</a>
+        {% endif %}
+    {% endblock content %}
+
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+      <li> Ip address was incorrect</li>
+    </ul>
+  {% endif %}
+{% endwith %}
+
+    <main>
+
+    <table class="main_table" id=1>
+        <tr class="table_header">
+            <th class="main_table">Interface name</th>
+            <th class="main_table">Status</th>
+            <th class="main_table">IPv4</th>
+            <th class="main_table">IPv4 subnet</th>
+            <th class="main_table">IPv6</th>
+            <th class="main_table">IPv6 subnet</th>
+            <th class="main_table">MAC</th>
+        </tr>
+        {% for interface in interfaces %}
+        <tr class="main_table">
+            <td class="main_table">{{ interface }}</td>
+            <td class="main_table">{{ interfaces[interface]['state'] }}
+                <br>
+                {% if session.get('key') == config['SECRET_COOKIE'] %}
+                <form action="/switch_state" method="post">
+                    <input type="submit" name="{{ interface }}" value="swith state"></form>
+                {% endif %}
+            </td>
+
+            <td class="main_table">
+                {% for address in interfaces[interface]['ipv4'] %}
+                <div>{{ address }}
+                {% if session.get('key') == config['SECRET_COOKIE'] %}
+
+                <form action="/del_ip" method="post">
+                <input type="hidden" name="{{ address }}">
+                <input type="submit" name="{{ interface }}" value="delete">
+                </form>
+
+                <form action="/change_ip" method="post">
+                <input type="hidden" name="{{ address }}">
+                <input type="text" name="{{ interface }}" autocomplete="on">
+                <input type="submit" value="change ip"></form>
+                </form>
+                </div>
+                <br><br>
+
+                {% endif %}
+                {% endfor %}
+
+                {% if session.get('key') == config['SECRET_COOKIE'] %}
+              <form action="/add_ip" method="post">
+              <label for="ip"></label>
+              <input type="text" name="{{ interface }}" autocomplete="on">
+              <input type="submit" value="add ip"></form>
+                {% endif %}
+
+            </td>
+
+            <td class="main_table">
+                {% for mask in interfaces[interface]['ipv4_mask'] %}
+                {{ mask }}<br>
+                {% if session.get('key') == config['SECRET_COOKIE'] %}
+
+                <form action="/change_mask" method="post">
+                <input type="hidden" name="{{ mask }}">
+                <input type="hidden" name="{{ interfaces[interface]['ipv4'][0] }}">
+                <input type="text" name="{{ interface }}" autocomplete="on"><br>
+                <input type="submit" value="change ip mask"></form>
+                </form>
+
+                <br><br>
+                {% endif %}
+                {% endfor %}
+            </td>
+
+            <td class="main_table">
+                {% for address in interfaces[interface]['ipv6'] %}
+                {{ address }}<br>
+                <!-- {% if session.get('key') == config['SECRET_COOKIE'] %} -->
+                <!-- {% endif %} -->
+                {% endfor %}
+           </td>
+
+            <td class="main_table">
+            {% for address in interfaces[interface]['ipv6_mask'] %}
+                {{ address }}<br>
+                <!-- {% if session.get('key') == config['SECRET_COOKIE'] %} -->
+                <!-- {% endif %} -->
+            {% endfor %}
+            </td>
+
+            <td class="main_table">{{ interfaces[interface]['MAC'] }}</td>
+
+        </tr>
+        {% endfor %}
+    </table>
+    </main>
+  {{ bootstrap.load_js() }}
+  </body>
+</html>
