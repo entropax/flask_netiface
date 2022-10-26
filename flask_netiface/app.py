@@ -55,10 +55,20 @@ def create_app(test_config=None):
 
         return render_template('auth.html')
 
-
     @app.route('/switch_state', methods=['POST'])
     def switch_state():
-        pass
+        interfaces = get_interfaces_info()
+        interface_button = list(request.form.keys())[0]
+        if interface_button in interfaces:
+            interface_name = interface_button
+            interface_status = interfaces[interface_name]['state']
+            switch_interface_status(
+                    interface_name,
+                    interface_status,
+                    cache.get('password'))
+            interfaces = get_interfaces_info()
+            return redirect(url_for('index'))
+        return redirect(url_for('index'))
 
     @app.route('/add_ip', methods=['POST'])
     def add_ip():
